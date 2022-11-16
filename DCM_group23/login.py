@@ -55,6 +55,10 @@ def signin():
                 "VOO",
                 "AAI",
                 "VVI",
+                "AOOR",
+                "VOOR",
+                "AAIR",
+                "VVIR",
             ]
             menuFrame = Frame(app, width=150, height=25, bg='white')
             menuFrame.place(x=310, y=0)
@@ -105,6 +109,30 @@ def signin():
                     hyst()
                     rateSm()
                 elif x == 'VVI':
+                    LRL_slider()
+                    URL_slider()
+                    AA_slider()
+                    APW_slider()
+                    VRP_slider()
+                    V_sens()
+                    hyst()
+                    rateSm()
+                elif x == 'AOOR' or x == 'VOOR':
+                    LRL_slider()
+                    URL_slider()
+                    AA_slider()
+                    APW_slider()
+                elif x == 'AAIR':
+                    LRL_slider()
+                    URL_slider()
+                    AA_slider()
+                    APW_slider()
+                    ARP_slider()
+                    A_sens()
+                    PVARP()
+                    hyst()
+                    rateSm()
+                elif x == 'VVIR':
                     LRL_slider()
                     URL_slider()
                     AA_slider()
@@ -167,31 +195,33 @@ def signin():
                       font=('Helvetica bold', 12)).place(x=0, y=120)
 
             def AA_slider():
-                # var0=IntVar()
-                # c0 = Checkbutton(displayFrame, text="Set Amplitude OFF", bg='white',variable=var0)
-                # c0.place(x=465,y=200)
-                # s3 = Scale(displayFrame, from_=0.5, to=3.2, orient=HORIZONTAL, length=250, resolution=0.1, background='white',troughcolor='#737CA1',activebackground='white')
-                # s3.place(x=200, y=190)
-                AA_modes = [
-                    "0", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6",
-                    "1.7", "1.8", "1.9", "2.0", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7", "2.8", "2.9",
-                    "3.0", "3.1", "3.2", "3.5", "4.0", "4.5", "5.0", "5.5", "6.0", "6.5", "7.0", "7.5",
-                ]
                 global clickedAA
-                clickedAA = StringVar()
-                clickedAA.set(AA_modes[-9])
-                dropdownAA = OptionMenu(displayFrame, clickedAA, *AA_modes)
-                dropdownAA.config(bg='white', width=10, fg='black', activebackground='white',
-                                  activeforeground='#737CA1')
-                dropdownAA["menu"].config(bg="white", fg="black", activebackground="white", activeforeground="#737CA1")
-                dropdownAA.place(x=200, y=190)
+                clickedAA = DoubleVar()
+                s3 = Scale(displayFrame, from_=0, to=5, orient=HORIZONTAL, length=250, resolution=0.1, background='white',troughcolor='#737CA1',activebackground='white',variable=clickedAA)
+                s3.set(5)
+                s3.place(x=200, y=190)
+
+                # AA_modes = [
+                #     "0", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6",
+                #     "1.7", "1.8", "1.9", "2.0", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7", "2.8", "2.9",
+                #     "3.0", "3.1", "3.2", "3.5", "4.0", "4.5", "5.0", "5.5", "6.0", "6.5", "7.0", "7.5",
+                # ]
+                # global clickedAA
+                # clickedAA = StringVar()
+                # clickedAA.set(AA_modes[-9])
+                # dropdownAA = OptionMenu(displayFrame, clickedAA, *AA_modes)
+                # dropdownAA.config(bg='white', width=10, fg='black', activebackground='white',
+                #                   activeforeground='#737CA1')
+                # dropdownAA["menu"].config(bg="white", fg="black", activebackground="white", activeforeground="#737CA1")
+                # dropdownAA.place(x=200, y=190)
+
                 Label(displayFrame, text='Amplitude (Volts):', bg='white', fg='#737CA1',
                       font=('Helvetica bold', 12)).place(x=0, y=190)
 
             def APW_slider():
                 global PW_value
                 PW_value = DoubleVar()
-                s4 = Scale(displayFrame, from_=0.1, to=1.9, orient=HORIZONTAL, length=250, resolution=0.1,
+                s4 = Scale(displayFrame, from_=1, to=30, orient=HORIZONTAL, length=250, resolution=1,
                            background='white', troughcolor='#737CA1', activebackground='white', variable=PW_value)
                 s4.place(x=200, y=260)
                 Label(displayFrame, text='Pulse Width (ms):', bg='white', fg='#737CA1',
@@ -234,43 +264,47 @@ def signin():
                       font=('Helvetica bold', 12)).place(x=460, y=260)
 
             def V_sens():
-                # s7 = Scale(displayFrame, from_=1, to=10, orient=HORIZONTAL, length=250, resolution=0.5, background='white',troughcolor='#737CA1', activebackground='white')
-                # s7.place(x=620, y=50)
-                # s7.set(2.5)
-                V_sens_modes = [
-                    "0.25", "0.5", "0.75", "1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5", "5.0", "5.5",
-                    "6.0", "6.5", "7.0", "7.5", "8.0", "8.5", "9.0", "9.5", "10.0",
-                ]
                 global V_clicked_sens
                 V_clicked_sens = StringVar()
-                V_clicked_sens.set(V_sens_modes[6])
-                V_dropdown_sens = OptionMenu(displayFrame, V_clicked_sens, *V_sens_modes)
-                V_dropdown_sens.config(bg='white', width=10, fg='black', activebackground='white',
-                                       activeforeground='#737CA1')
-                V_dropdown_sens["menu"].config(bg="white", fg="black", activebackground="white",
-                                               activeforeground="#737CA1")
-                V_dropdown_sens.place(x=620, y=50)
-                Label(displayFrame, text='Sensitivity (mV):', bg='white', fg='#737CA1',
+                s7 = Scale(displayFrame, from_=0, to=5, orient=HORIZONTAL, length=250, resolution=0.1, background='white',troughcolor='#737CA1', activebackground='white',variable=V_clicked_sens)
+                s7.place(x=620, y=50)
+                s7.set(0)
+                # V_sens_modes = [
+                #     "0.25", "0.5", "0.75", "1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5", "5.0", "5.5",
+                #     "6.0", "6.5", "7.0", "7.5", "8.0", "8.5", "9.0", "9.5", "10.0",
+                # ]
+                # global V_clicked_sens
+                # V_clicked_sens = StringVar()
+                # V_clicked_sens.set(V_sens_modes[6])
+                # V_dropdown_sens = OptionMenu(displayFrame, V_clicked_sens, *V_sens_modes)
+                # V_dropdown_sens.config(bg='white', width=10, fg='black', activebackground='white',
+                #                        activeforeground='#737CA1')
+                # V_dropdown_sens["menu"].config(bg="white", fg="black", activebackground="white",
+                #                                activeforeground="#737CA1")
+                # V_dropdown_sens.place(x=620, y=50)
+                Label(displayFrame, text='Sensitivity (V):', bg='white', fg='#737CA1',
                       font=('Helvetica bold', 12)).place(x=480, y=50)
 
             def A_sens():
-                # s8 = Scale(displayFrame, from_=0.25, to=0.75,digits=2, orient=HORIZONTAL, length=250, resolution=0.25, background='white',troughcolor='#737CA1', activebackground='white')
-                # s8.place(x=620, y=50)
-                # s8.set(0.75)
-                A_sens_modes = [
-                    "0.25", "0.5", "0.75", "1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5", "5.0", "5.5",
-                    "6.0", "6.5", "7.0", "7.5", "8.0", "8.5", "9.0", "9.5", "10.0",
-                ]
                 global A_clicked_sens
-                A_clicked_sens = StringVar()
-                A_clicked_sens.set(A_sens_modes[2])
-                A_dropdown_sens = OptionMenu(displayFrame, A_clicked_sens, *A_sens_modes)
-                A_dropdown_sens.config(bg='white', width=10, fg='black', activebackground='white',
-                                       activeforeground='#737CA1')
-                A_dropdown_sens["menu"].config(bg="white", fg="black", activebackground="white",
-                                               activeforeground="#737CA1")
-                A_dropdown_sens.place(x=620, y=50)
-                Label(displayFrame, text='Sensitivity (mV):', bg='white', fg='#737CA1',
+                A_clicked_sens=DoubleVar()
+                s8 = Scale(displayFrame, from_=0, to=5,digits=2, orient=HORIZONTAL, length=250, resolution=0.1, background='white',troughcolor='#737CA1', activebackground='white',variable=A_clicked_sens)
+                s8.place(x=620, y=50)
+
+                # A_sens_modes = [
+                #     "0.25", "0.5", "0.75", "1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5", "5.0", "5.5",
+                #     "6.0", "6.5", "7.0", "7.5", "8.0", "8.5", "9.0", "9.5", "10.0",
+                # ]
+                # global A_clicked_sens
+                # A_clicked_sens = StringVar()
+                # A_clicked_sens.set(A_sens_modes[2])
+                # A_dropdown_sens = OptionMenu(displayFrame, A_clicked_sens, *A_sens_modes)
+                # A_dropdown_sens.config(bg='white', width=10, fg='black', activebackground='white',
+                #                        activeforeground='#737CA1')
+                # A_dropdown_sens["menu"].config(bg="white", fg="black", activebackground="white",
+                #                                activeforeground="#737CA1")
+                # A_dropdown_sens.place(x=620, y=50)
+                Label(displayFrame, text='Sensitivity (V):', bg='white', fg='#737CA1',
                       font=('Helvetica bold', 12)).place(x=480, y=50)
 
             def PVARP():
@@ -284,102 +318,12 @@ def signin():
                     x=480, y=130)
                 Label(displayFrame, text='(Post Ventricular Atrial Refractory Period)', bg='white', fg='#737CA1',
                       font=('Helvetica bold', 9)).place(x=635, y=175)
-            # def setValues():
-            #     if currentMode=='AOO':
-            #         AOO_LRL=clickedLRL.get()
-            #         AOO_URL=str(URL_value.get())
-            #         AOO_AA=clickedAA.get()
-            #         AOO_APW=PW_value.get()
-            #         f = open("data.json", "r+")
-            #         data = json.load(f)
-            #         for i in data:
-            #             if i["username"] == username:
-            #                 i["AOO"]["LRL"] = AOO_LRL
-            #                 i["AOO"]["URL"] = AOO_URL
-            #                 i["AOO"]["AA"] = AOO_AA
-            #                 i["AOO"]["APW"] = AOO_APW
-            #         open("data.json", "w").write(
-            #             json.dumps(data, indent=4, separators=(',', ': '))
-            #         )
-            #     elif currentMode=='AAI':
-            #         AAI_LRL=clickedLRL.get()
-            #         AAI_URL=str(URL_value.get())
-            #         AAI_AA=clickedAA.get()
-            #         AAI_APW=str(PW_value.get())
-            #         AAI_ARP=str(ARP_value.get())
-            #         AAI_AS=A_clicked_sens.get()
-            #         AAI_PVARP=str(PVARP1.get())
-            #         if int(hyst_value.get()) == 1:
-            #             AAI_H=clickedLRL.get()
-            #         else:
-            #             AAI_H='0'
-            #         AAI_S=str(smoothingRate.get())
-            #
-            #         f = open("data.json", "r+")
-            #         data = json.load(f)
-            #         for i in data:
-            #             if i["username"] == username:
-            #                 i["AAI"]["LRL"] = AAI_LRL
-            #                 i["AAI"]["URL"] = AAI_URL
-            #                 i["AAI"]["AA"] = AAI_AA
-            #                 i["AAI"]["APW"] = AAI_APW
-            #                 i["AAI"]["ARP"] = AAI_ARP
-            #                 i["AAI"]["AS"] = AAI_AS
-            #                 i["AAI"]["PVARP"] = AAI_PVARP
-            #                 i["AAI"]["H"] = AAI_H
-            #                 i["AAI"]["S"] = AAI_S
-            #         open("data.json", "w").write(
-            #             json.dumps(data, indent=4, separators=(',', ': '))
-            #         )
-            #     elif currentMode=='VOO':
-            #         VOO_LRL=clickedLRL.get()
-            #         VOO_URL=str(URL_value.get())
-            #         VOO_VA=clickedAA.get()
-            #         VOO_VPW=str(PW_value.get())
-            #         f = open("data.json", "r+")
-            #         data = json.load(f)
-            #         for i in data:
-            #             if i["username"] == username:
-            #                 i["VOO"]["LRL"] = VOO_LRL
-            #                 i["VOO"]["URL"] = VOO_URL
-            #                 i["VOO"]["VA"] = VOO_VA
-            #                 i["VOO"]["VPW"] = VOO_VPW
-            #         open("data.json", "w").write(
-            #             json.dumps(data, indent=4, separators=(',', ': '))
-            #         )
-            #     elif currentMode=='VVI':
-            #         VVI_LRL=clickedLRL.get()
-            #         VVI_URL=str(URL_value.get())
-            #         VVI_VA=clickedAA.get()
-            #         VVI_VPW=str(PW_value.get())
-            #         VVI_VRP=str(ARP_value.get())
-            #         VVI_VS=A_clicked_sens.get()
-            #         if int(hyst_value.get()) == 1:
-            #             VVI_H=clickedLRL.get()
-            #         else:
-            #             VVI_H='0'
-            #         VVI_S=str(smoothingRate.get())
-            #
-            #         f = open("data.json", "r+")
-            #         data = json.load(f)
-            #         for i in data:
-            #             if i["username"] == username:
-            #                 i["VVI"]["LRL"] = VVI_LRL
-            #                 i["VVI"]["URL"] = VVI_URL
-            #                 i["VVI"]["VA"] = VVI_VA
-            #                 i["VVI"]["VPW"] = VVI_VPW
-            #                 i["VVI"]["VRP"] = VVI_VRP
-            #                 i["VVI"]["VS"] = VVI_VS
-            #                 i["VVI"]["H"] = VVI_H
-            #                 i["VVI"]["S"] = VVI_S
-            #         open("data.json", "w").write(
-            #             json.dumps(data, indent=4, separators=(',', ': '))
-            #         )
+
             def outputVal():
                 if currentMode=='AOO':
                     AOO_LRL=clickedLRL.get()
                     AOO_URL=str(URL_value.get())
-                    AOO_AA=clickedAA.get()
+                    AOO_AA=str(clickedAA.get())
                     AOO_APW=str(PW_value.get())
                     f = open("data.json", "r+")
                     data = json.load(f)
@@ -398,7 +342,7 @@ def signin():
                     AAI_AA=clickedAA.get()
                     AAI_APW=str(PW_value.get())
                     AAI_ARP=str(ARP_value.get())
-                    AAI_AS=A_clicked_sens.get()
+                    AAI_AS=str(A_clicked_sens.get())
                     AAI_PVARP=str(PVARP1.get())
                     if int(hyst_value.get()) == 1:
                         AAI_H=clickedLRL.get()
@@ -444,7 +388,7 @@ def signin():
                     VVI_VA=clickedAA.get()
                     VVI_VPW=str(PW_value.get())
                     VVI_VRP=str(VRP_value.get())
-                    VVI_VS=V_clicked_sens.get()
+                    VVI_VS=str(V_clicked_sens.get())
                     if int(hyst_value.get()) == 1:
                         VVI_H=clickedLRL.get()
                     else:
@@ -469,17 +413,21 @@ def signin():
                 print('------------------------------')
                 print(currentMode)
                 if currentMode == 'AOO' or currentMode == 'VOO':
-                    print('Lower Rate Limit', clickedLRL.get() + 'ppm')
-                    print('Upper Rate Limit', str(URL_value.get()) + 'ppm')
-                    print('Amplitude: ', clickedAA.get(), 'V')
-                    print('Pulse Width: ', PW_value.get(), 'V')
+                    if int(clickedLRL.get())>=URL_value.get():
+                        print('Please Try Again!')
+                        messagebox.showerror("Invalid Entry", "Lower Rate Limit cannot be greater than or equal to Upper Rate Limit!!")
+                    else:
+                        print('Lower Rate Limit:', clickedLRL.get() + 'ppm')
+                        print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
+                        print('Amplitude: ', clickedAA.get(), 'V')
+                        print('Pulse Width: ', PW_value.get(), 'V')
                 elif currentMode == 'AAI':
-                    print('Lower Rate Limit', clickedLRL.get() + 'ppm')
-                    print('Upper Rate Limit', str(URL_value.get()) + 'ppm')
+                    print('Lower Rate Limit:', clickedLRL.get() + 'ppm')
+                    print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
                     print('Amplitude: ', clickedAA.get(), 'V')
                     print('Pulse Width: ', PW_value.get(), 'V')
                     print('Refractory Period: ', str(ARP_value.get()) + 'ms')
-                    print('A Sensitivity: ', A_clicked_sens.get(), 'mV')
+                    print('A Sensitivity: ', str(A_clicked_sens.get()), 'V')
                     print('PVARP: ' + str(PVARP1.get()) + 'ms')
                     if int(hyst_value.get()) == 1:
                         print('Hysterisis Rate Limit, same as LRL=', clickedLRL.get(), 'ppm')
@@ -487,12 +435,12 @@ def signin():
                         print('Hysteresis is OFF')
                     print('Smoothing Rate: ', str(smoothingRate.get()) + '%')
                 elif currentMode == 'VVI':
-                    print('Lower Rate Limit', clickedLRL.get() + 'ppm')
-                    print('Upper Rate Limit', str(URL_value.get()) + 'ppm')
+                    print('Lower Rate Limit:', clickedLRL.get() + 'ppm')
+                    print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
                     print('Amplitude: ', clickedAA.get(), 'V')
                     print('Pulse Width: ', PW_value.get(), 'V')
                     print('Refractory Period: ', str(VRP_value.get()) + 'ms')
-                    print('V Sensitivity: ', V_clicked_sens.get(), 'mV')
+                    print('V Sensitivity: ', str(V_clicked_sens.get()), 'V')
                     print('Hysteresis', hyst_value.get())
                     print('Smoothing Rate: ', str(smoothingRate.get()) + '%')
 
@@ -584,16 +532,19 @@ def signin():
                 def noLoad():
                     popUser.destroy()
                 def yesLoad():
-                    if currentMode=='AOO':
-                        print('LRL: '+AOO_LRL+'\nURL: '+AOO_URL+'\nAmplitude: '+AOO_AA+'\nPulse Width: '+AOO_APW)
-                    elif currentMode=='AAI':
-                        print('LRL: '+AAI_LRL+'\nURL: '+AAI_URL+'\nAmplitude: '+AAI_AA+'\nPulse Width: '+AAI_APW+
-                                                '\nRefactory Period: '+AAI_ARP+'\nSensitivity: '+AAI_AS+'\nPVARP: '+AAI_PVARP+'\nHysterysis: '+AAI_H+'\nSmoothing: '+AAI_S)
-                    elif currentMode=='VOO':
-                        print('LRL: ' + VOO_LRL + '\nURL: ' + VOO_URL + '\nAmplitude: ' + VOO_VA + '\nPulse Width: ' + VOO_VPW)
-                    elif currentMode=='VVI':
-                        print('LRL: '+VVI_LRL+'\nURL: '+VVI_URL+'\nAmplitude: '+VVI_AA+'\nPulse Width: '+VVI_APW+
-                                            '\nRefactory Period: '+VVI_ARP+'\nSensitivity: '+VVI_AS+'\nHysterysis: '+VVI_H+'\nSmoothing: '+VVI_S)
+                    try:
+                        if currentMode=='AOO':
+                            print('LRL: '+AOO_LRL+'\nURL: '+AOO_URL+'\nAmplitude: '+AOO_AA+'\nPulse Width: '+AOO_APW)
+                        elif currentMode=='AAI':
+                            print('LRL: '+AAI_LRL+'\nURL: '+AAI_URL+'\nAmplitude: '+AAI_AA+'\nPulse Width: '+AAI_APW+
+                                                    '\nRefactory Period: '+AAI_ARP+'\nSensitivity: '+AAI_AS+'\nPVARP: '+AAI_PVARP+'\nHysterysis: '+AAI_H+'\nSmoothing: '+AAI_S)
+                        elif currentMode=='VOO':
+                            print('LRL: ' + VOO_LRL + '\nURL: ' + VOO_URL + '\nAmplitude: ' + VOO_VA + '\nPulse Width: ' + VOO_VPW)
+                        elif currentMode=='VVI':
+                            print('LRL: '+VVI_LRL+'\nURL: '+VVI_URL+'\nAmplitude: '+VVI_AA+'\nPulse Width: '+VVI_APW+
+                                                '\nRefactory Period: '+VVI_ARP+'\nSensitivity: '+VVI_AS+'\nHysterysis: '+VVI_H+'\nSmoothing: '+VVI_S)
+                    except:
+                        pass
                     popUser.destroy()
 
                 o1=Button(popUser, width=20, pady=8, text="Yes", bg='#737CA1', fg='white', border=0,command=yesLoad)
