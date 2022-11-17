@@ -25,11 +25,13 @@ heading1.place(x=35, y=10)
 
 heading = Label(frame, text='Login', fg='#737CA1', bg='white', font=('Microsoft YaHei UI Light', 23, 'bold'))
 heading.place(x=175, y=5)
-
+global loginStatus
+loginStatus=0
 
 ## LOGIN
 #obtain username and password from entry field and match it against stored data base
 def signin():
+    global loginStatus
     global username
     username = user.get()
     password = pw.get()
@@ -39,9 +41,11 @@ def signin():
         r = ast.literal_eval(d)
         file.close()
         #if the username and password match the database login is successful
-        if username in r.keys() and password == r[username]:
-            main.destroy()
-            app = Tk()
+        if username in r.keys() and password == r[username] and loginStatus==0:
+            #main.destroy()
+            loginStatus=1
+            app = Toplevel(main)
+            #app = Tk()
             app.title("App")
             app.geometry('950x500+300+150')
             app.configure(bg='white')
@@ -50,6 +54,13 @@ def signin():
             heading1 = Label(app, text='Choose Pacemaker Mode', fg='#737CA1', bg='white',
                              font=('Microsoft YaHei UI Light', 16, 'bold'))
             heading1.place(x=35, y=20)
+
+            def closeDCM():
+                global loginStatus
+                loginStatus=0
+                app.destroy()
+            app.protocol("WM_DELETE_WINDOW", closeDCM)
+
             ## MODE SELECTION
             modes = [
                 "AOO",
@@ -69,10 +80,18 @@ def signin():
             deviceStatus = Label(app, text='Device Status:', fg='black', bg='white',
                                  font=('Microsoft YaHei UI Light', 16, 'bold'))
             deviceStatus.place(x=500, y=20)
-            deviceStatus1 = Label(app, text='Disconnected...', fg='black', bg='white',
+            deviceStatus1 = Label(app, text='Disconnected...', fg='#C11B17', bg='white',
                                   font=('Microsoft YaHei UI Light', 14))
             deviceStatus1.place(x=650, y=21)
             Label(app, text='User: '+username, fg='#342D7E', bg='white',font=('Microsoft YaHei UI Light', 9)).place(x=1,y=1)
+            def logout():
+                global loginStatus
+                confirmClose=messagebox.askokcancel("Confirm Logout", "Are you sure you want to logout?")
+                if confirmClose:
+                    loginStatus = 0
+                    app.destroy()
+            Button(app, width=8, pady=5, text="Logout", bg='#737CA1', fg='white', border=0,
+                   command=logout).place(x=850, y=20)
 
             # def about():
             #     pop = Toplevel(app)
