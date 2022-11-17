@@ -4,6 +4,7 @@ import ast
 import os
 import json
 
+#Create main page for logging in to DCM
 main = Tk()
 main.title("Login")
 main.geometry('950x500+300+150')
@@ -27,6 +28,7 @@ heading.place(x=175, y=5)
 
 
 ## LOGIN
+#obtain username and password from entry field and match it against stored data base
 def signin():
     global username
     username = user.get()
@@ -36,8 +38,7 @@ def signin():
         d = file.read()
         r = ast.literal_eval(d)
         file.close()
-        # print(r.keys())
-        # print(r.values())
+        #if the username and password match the database login is successful
         if username in r.keys() and password == r[username]:
             main.destroy()
             app = Tk()
@@ -85,21 +86,21 @@ def signin():
             # aboutButton = Button(app, text='About', bg='#737CA1', fg='white', width=10, command=about)
             # aboutButton.place(x=850, y=20)
 
-            def clear_frame():
+            def clear_frame(): #used to clear the current mode before updating with attributes/parameters for a new mode
                 for widgets in displayFrame.winfo_children():
                     widgets.destroy()
 
-            def selected(x):
+            def selected(x): #display certain sliders and adjustable parameters based on the mode selected
                 clear_frame()
                 setButton()
                 loadPrev()
                 if x == 'AOO' or x == 'VOO':
-                    LRL_slider()
+                    LRL_dropdown()
                     URL_slider()
                     AA_slider()
                     APW_slider()
                 elif x == 'AAI':
-                    LRL_slider()
+                    LRL_dropdown()
                     URL_slider()
                     AA_slider()
                     APW_slider()
@@ -109,7 +110,7 @@ def signin():
                     hyst()
                     rateSm()
                 elif x == 'VVI':
-                    LRL_slider()
+                    LRL_dropdown()
                     URL_slider()
                     AA_slider()
                     APW_slider()
@@ -118,12 +119,12 @@ def signin():
                     hyst()
                     rateSm()
                 elif x == 'AOOR' or x == 'VOOR':
-                    LRL_slider()
+                    LRL_dropdown()
                     URL_slider()
                     AA_slider()
                     APW_slider()
                 elif x == 'AAIR':
-                    LRL_slider()
+                    LRL_dropdown()
                     URL_slider()
                     AA_slider()
                     APW_slider()
@@ -133,7 +134,7 @@ def signin():
                     hyst()
                     rateSm()
                 elif x == 'VVIR':
-                    LRL_slider()
+                    LRL_dropdown()
                     URL_slider()
                     AA_slider()
                     APW_slider()
@@ -160,7 +161,7 @@ def signin():
             #     global LRL_value
             #     LRL_value=IntVar()
             #     LRL_value=x
-            def LRL_slider():
+            def LRL_dropdown(): #dropdown for the lower rate limit
                 LRL_modes = [
                     "30", "35", "40", "45", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61",
                     "62", "63", "64", "65", "66", "67", "68", "69", "70",
@@ -184,7 +185,7 @@ def signin():
                 Label(displayFrame, text='Lower Rate Limit (ppm):', bg='white', fg='#737CA1',
                       font=('Helvetica bold', 12)).place(x=0, y=50)
 
-            def URL_slider():
+            def URL_slider(): #slider for the upper rate limit
                 global URL_value
                 URL_value = IntVar()
                 s2 = Scale(displayFrame, from_=50, to=175, orient=HORIZONTAL, length=250, resolution=5,
@@ -194,7 +195,7 @@ def signin():
                 Label(displayFrame, text='Upper Rate Limit (ppm):', bg='white', fg='#737CA1',
                       font=('Helvetica bold', 12)).place(x=0, y=120)
 
-            def AA_slider():
+            def AA_slider(): #slider for the amplitudes
                 global clickedAA
                 clickedAA = DoubleVar()
                 s3 = Scale(displayFrame, from_=0, to=5, orient=HORIZONTAL, length=250, resolution=0.1, background='white',troughcolor='#737CA1',activebackground='white',variable=clickedAA)
@@ -218,7 +219,7 @@ def signin():
                 Label(displayFrame, text='Amplitude (Volts):', bg='white', fg='#737CA1',
                       font=('Helvetica bold', 12)).place(x=0, y=190)
 
-            def APW_slider():
+            def APW_slider(): #slider for the pulse width
                 global PW_value
                 PW_value = DoubleVar()
                 s4 = Scale(displayFrame, from_=1, to=30, orient=HORIZONTAL, length=250, resolution=1,
@@ -227,7 +228,7 @@ def signin():
                 Label(displayFrame, text='Pulse Width (ms):', bg='white', fg='#737CA1',
                       font=('Helvetica bold', 12)).place(x=0, y=260)
 
-            def ARP_slider():
+            def ARP_slider(): #slider for the refractory period (atrial)
                 global ARP_value
                 ARP_value = IntVar()
                 s5 = Scale(displayFrame, from_=150, to=500, orient=HORIZONTAL, length=250, resolution=10,
@@ -237,7 +238,7 @@ def signin():
                 Label(displayFrame, text='Atrial Refactory \n Period (ms):', padx=6, bg='white', fg='#737CA1',
                       font=('Helvetica bold', 12)).place(x=460, y=200)
 
-            def VRP_slider():
+            def VRP_slider(): #slider for the refractory period (ventricle)
                 global VRP_value
                 VRP_value = IntVar()
                 s6 = Scale(displayFrame, from_=150, to=500, orient=HORIZONTAL, length=250, resolution=10,
@@ -247,14 +248,14 @@ def signin():
                 Label(displayFrame, text='Ventricular Refactory \nPeriod (ms):', bg='white', fg='#737CA1',
                       font=('Helvetica bold', 12)).place(x=460, y=200)
 
-            def hyst():
+            def hyst(): #checkbutton for hysteresis mode
                 global hyst_value
                 hyst_value = IntVar()
                 c1 = Checkbutton(displayFrame, text="Hysteresis Rate Limit (Same as LRL)", bg='white',
                                  variable=hyst_value)
                 c1.place(x=0, y=330)
 
-            def rateSm():
+            def rateSm(): #slider for smoothing rate
                 global smoothingRate
                 smoothingRate = IntVar()
                 s6 = Scale(displayFrame, from_=0, to=25, orient=HORIZONTAL, length=250, resolution=3.07,
@@ -263,7 +264,7 @@ def signin():
                 Label(displayFrame, text='Rate Smoothing (%):', bg='white', fg='#737CA1',
                       font=('Helvetica bold', 12)).place(x=460, y=260)
 
-            def V_sens():
+            def V_sens(): #slider for ventricular sensitivity
                 global V_clicked_sens
                 V_clicked_sens = StringVar()
                 s7 = Scale(displayFrame, from_=0, to=5, orient=HORIZONTAL, length=250, resolution=0.1, background='white',troughcolor='#737CA1', activebackground='white',variable=V_clicked_sens)
@@ -285,7 +286,7 @@ def signin():
                 Label(displayFrame, text='Sensitivity (V):', bg='white', fg='#737CA1',
                       font=('Helvetica bold', 12)).place(x=480, y=50)
 
-            def A_sens():
+            def A_sens(): #slider for atrial sensitvity
                 global A_clicked_sens
                 A_clicked_sens=DoubleVar()
                 s8 = Scale(displayFrame, from_=0, to=5,digits=2, orient=HORIZONTAL, length=250, resolution=0.1, background='white',troughcolor='#737CA1', activebackground='white',variable=A_clicked_sens)
@@ -307,7 +308,7 @@ def signin():
                 Label(displayFrame, text='Sensitivity (V):', bg='white', fg='#737CA1',
                       font=('Helvetica bold', 12)).place(x=480, y=50)
 
-            def PVARP():
+            def PVARP(): #slider for PVARP
                 global PVARP1
                 PVARP1 = IntVar()
                 s9 = Scale(displayFrame, from_=150, to=500, orient=HORIZONTAL, length=250, resolution=10,
@@ -319,13 +320,13 @@ def signin():
                 Label(displayFrame, text='(Post Ventricular Atrial Refractory Period)', bg='white', fg='#737CA1',
                       font=('Helvetica bold', 9)).place(x=635, y=175)
 
-            def outputVal():
+            def outputVal(): #save values to json file and output them once the "Set Values" Button has been pressed
                 if currentMode=='AOO':
                     AOO_LRL=clickedLRL.get()
                     AOO_URL=str(URL_value.get())
                     AOO_AA=str(clickedAA.get())
                     AOO_APW=str(PW_value.get())
-                    f = open("data.json", "r+")
+                    f = open("data.json", "r+") #open json and store data within json database
                     data = json.load(f)
                     for i in data:
                         if i["username"] == username:
@@ -339,7 +340,7 @@ def signin():
                 elif currentMode=='AAI':
                     AAI_LRL=clickedLRL.get()
                     AAI_URL=str(URL_value.get())
-                    AAI_AA=clickedAA.get()
+                    AAI_AA=str(clickedAA.get())
                     AAI_APW=str(PW_value.get())
                     AAI_ARP=str(ARP_value.get())
                     AAI_AS=str(A_clicked_sens.get())
@@ -369,7 +370,7 @@ def signin():
                 elif currentMode=='VOO':
                     VOO_LRL=clickedLRL.get()
                     VOO_URL=str(URL_value.get())
-                    VOO_VA=clickedAA.get()
+                    VOO_VA=str(clickedAA.get())
                     VOO_VPW=str(PW_value.get())
                     f = open("data.json", "r+")
                     data = json.load(f)
@@ -385,7 +386,7 @@ def signin():
                 elif currentMode=='VVI':
                     VVI_LRL=clickedLRL.get()
                     VVI_URL=str(URL_value.get())
-                    VVI_VA=clickedAA.get()
+                    VVI_VA=str(clickedAA.get())
                     VVI_VPW=str(PW_value.get())
                     VVI_VRP=str(VRP_value.get())
                     VVI_VS=str(V_clicked_sens.get())
@@ -410,21 +411,146 @@ def signin():
                     open("data.json", "w").write(
                         json.dumps(data, indent=4, separators=(',', ': '))
                     )
+                elif currentMode == 'AOOR':
+                    AOO_LRL = clickedLRL.get()
+                    AOO_URL = str(URL_value.get())
+                    AOO_AA = str(clickedAA.get())
+                    AOO_APW = str(PW_value.get())
+                    f = open("data.json", "r+")
+                    data = json.load(f)
+                    for i in data:
+                        if i["username"] == username:
+                            i["AOOR"]["LRL"] = AOO_LRL
+                            i["AOOR"]["URL"] = AOO_URL
+                            i["AOOR"]["AA"] = AOO_AA
+                            i["AOOR"]["APW"] = AOO_APW
+                    open("data.json", "w").write(
+                        json.dumps(data, indent=4, separators=(',', ': '))
+                    )
+                elif currentMode == 'AAIR':
+                    AAI_LRL = clickedLRL.get()
+                    AAI_URL = str(URL_value.get())
+                    AAI_AA = str(clickedAA.get())
+                    AAI_APW = str(PW_value.get())
+                    AAI_ARP = str(ARP_value.get())
+                    AAI_AS = str(A_clicked_sens.get())
+                    AAI_PVARP = str(PVARP1.get())
+                    if int(hyst_value.get()) == 1:
+                        AAI_H = clickedLRL.get()
+                    else:
+                        AAI_H = '0'
+                    AAI_S = str(smoothingRate.get())
+
+                    f = open("data.json", "r+")
+                    data = json.load(f)
+                    for i in data:
+                        if i["username"] == username:
+                            i["AAIR"]["LRL"] = AAI_LRL
+                            i["AAIR"]["URL"] = AAI_URL
+                            i["AAIR"]["AA"] = AAI_AA
+                            i["AAIR"]["APW"] = AAI_APW
+                            i["AAIR"]["ARP"] = AAI_ARP
+                            i["AAIR"]["AS"] = AAI_AS
+                            i["AAIR"]["PVARP"] = AAI_PVARP
+                            i["AAIR"]["H"] = AAI_H
+                            i["AAIR"]["S"] = AAI_S
+                    open("data.json", "w").write(
+                        json.dumps(data, indent=4, separators=(',', ': '))
+                    )
+                elif currentMode == 'VOOR':
+                    VOO_LRL = clickedLRL.get()
+                    VOO_URL = str(URL_value.get())
+                    VOO_VA = str(clickedAA.get())
+                    VOO_VPW = str(PW_value.get())
+                    f = open("data.json", "r+")
+                    data = json.load(f)
+                    for i in data:
+                        if i["username"] == username:
+                            i["VOOR"]["LRL"] = VOO_LRL
+                            i["VOOR"]["URL"] = VOO_URL
+                            i["VOOR"]["VA"] = VOO_VA
+                            i["VOOR"]["VPW"] = VOO_VPW
+                    open("data.json", "w").write(
+                        json.dumps(data, indent=4, separators=(',', ': '))
+                    )
+                elif currentMode == 'VVIR':
+                    VVI_LRL = clickedLRL.get()
+                    VVI_URL = str(URL_value.get())
+                    VVI_VA = str(clickedAA.get())
+                    VVI_VPW = str(PW_value.get())
+                    VVI_VRP = str(VRP_value.get())
+                    VVI_VS = str(V_clicked_sens.get())
+                    if int(hyst_value.get()) == 1:
+                        VVI_H = clickedLRL.get()
+                    else:
+                        VVI_H = '0'
+                    VVI_S = str(smoothingRate.get())
+
+                    f = open("data.json", "r+")
+                    data = json.load(f)
+                    for i in data:
+                        if i["username"] == username:
+                            i["VVIR"]["LRL"] = VVI_LRL
+                            i["VVIR"]["URL"] = VVI_URL
+                            i["VVIR"]["VA"] = VVI_VA
+                            i["VVIR"]["VPW"] = VVI_VPW
+                            i["VVIR"]["VRP"] = VVI_VRP
+                            i["VVIR"]["VS"] = VVI_VS
+                            i["VVIR"]["H"] = VVI_H
+                            i["VVIR"]["S"] = VVI_S
+                    open("data.json", "w").write(
+                        json.dumps(data, indent=4, separators=(',', ': '))
+                    )
                 print('------------------------------')
                 print(currentMode)
-                if currentMode == 'AOO' or currentMode == 'VOO':
+                if currentMode == 'AOO' or currentMode == 'VOO': #depending on the mode selected print the selected parameters
                     if int(clickedLRL.get())>=URL_value.get():
                         print('Please Try Again!')
                         messagebox.showerror("Invalid Entry", "Lower Rate Limit cannot be greater than or equal to Upper Rate Limit!!")
                     else:
                         print('Lower Rate Limit:', clickedLRL.get() + 'ppm')
                         print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
-                        print('Amplitude: ', clickedAA.get(), 'V')
+                        print('Amplitude: ', str(clickedAA.get()), 'V')
                         print('Pulse Width: ', PW_value.get(), 'V')
                 elif currentMode == 'AAI':
+                    if int(clickedLRL.get())>=URL_value.get():
+                        print('Please Try Again!')
+                        messagebox.showerror("Invalid Entry", "Lower Rate Limit cannot be greater than or equal to Upper Rate Limit!!")
+                    else:
+                        print('Lower Rate Limit:', clickedLRL.get() + 'ppm')
+                        print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
+                        print('Amplitude: ', str(clickedAA.get()), 'V')
+                        print('Pulse Width: ', PW_value.get(), 'V')
+                        print('Refractory Period: ', str(ARP_value.get()) + 'ms')
+                        print('A Sensitivity: ', str(A_clicked_sens.get()), 'V')
+                        print('PVARP: ' + str(PVARP1.get()) + 'ms')
+                        if int(hyst_value.get()) == 1:
+                            print('Hysterisis Rate Limit, same as LRL=', clickedLRL.get(), 'ppm')
+                        else:
+                            print('Hysteresis is OFF')
+                        print('Smoothing Rate: ', str(smoothingRate.get()) + '%')
+                elif currentMode == 'VVI':
+                    if int(clickedLRL.get())>=URL_value.get():
+                        print('Please Try Again!')
+                        messagebox.showerror("Invalid Entry", "Lower Rate Limit cannot be greater than or equal to Upper Rate Limit!!")
+                    else:
+                        print('Lower Rate Limit:', clickedLRL.get() + 'ppm')
+                        print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
+                        print('Amplitude: ', str(clickedAA.get()), 'V')
+                        print('Pulse Width: ', PW_value.get(), 'V')
+                        print('Refractory Period: ', str(VRP_value.get()) + 'ms')
+                        print('V Sensitivity: ', str(V_clicked_sens.get()), 'V')
+                        print('Hysteresis', hyst_value.get())
+                        print('Smoothing Rate: ', str(smoothingRate.get()) + '%')
+                elif currentMode == 'AOOR' or currentMode == 'VOOR':
                     print('Lower Rate Limit:', clickedLRL.get() + 'ppm')
                     print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
-                    print('Amplitude: ', clickedAA.get(), 'V')
+                    print('Amplitude: ', str(clickedAA.get()), 'V')
+                    print('Pulse Width: ', PW_value.get(), 'V')
+                elif currentMode == 'AAIR':
+                    print('Lower Rate Limit:', clickedLRL.get() + 'ppm')
+                    print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
+                    print('Amplitude: ', str(clickedAA.get()), 'V')
                     print('Pulse Width: ', PW_value.get(), 'V')
                     print('Refractory Period: ', str(ARP_value.get()) + 'ms')
                     print('A Sensitivity: ', str(A_clicked_sens.get()), 'V')
@@ -434,10 +560,10 @@ def signin():
                     else:
                         print('Hysteresis is OFF')
                     print('Smoothing Rate: ', str(smoothingRate.get()) + '%')
-                elif currentMode == 'VVI':
+                elif currentMode == 'VVIR':
                     print('Lower Rate Limit:', clickedLRL.get() + 'ppm')
                     print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
-                    print('Amplitude: ', clickedAA.get(), 'V')
+                    print('Amplitude: ', str(clickedAA.get()), 'V')
                     print('Pulse Width: ', PW_value.get(), 'V')
                     print('Refractory Period: ', str(VRP_value.get()) + 'ms')
                     print('V Sensitivity: ', str(V_clicked_sens.get()), 'V')
@@ -494,21 +620,19 @@ def signin():
                                                    fg='black',font=('Microsoft YaHei UI Light', 12), bg='white')
                                 aai_val.pack()
                 elif currentMode=='VOO':
-                    f = open("data.json", "r+")
-                    data = json.load(f)
                     for i in data:
                         if i["username"] == username:
                             if i["VOO"]["LRL"] == "":
                                 print("No previous parameters saved")
-                        else:
-                            VOO_LRL = i["VOO"]["LRL"]
-                            VOO_URL = i["VOO"]["URL"]
-                            VOO_VA = i["VOO"]["VA"]
-                            VOO_VPW = i["VOO"]["VPW"]
-                            voo_val = Label(popUser,
-                                            text='LRL: ' + VOO_LRL + '\nURL: ' + VOO_URL + '\nAmplitude: ' + VOO_VA + '\nPulse Width: ' + VOO_VPW,
-                                            fg='black', font=('Microsoft YaHei UI Light', 12), bg='white')
-                            voo_val.pack()
+                            else:
+                                VOO_LRL = i["VOO"]["LRL"]
+                                VOO_URL = i["VOO"]["URL"]
+                                VOO_VA = i["VOO"]["VA"]
+                                VOO_VPW = i["VOO"]["VPW"]
+                                # print('the value obtained: ' + VOO_LRL)
+                                aoo_val = Label(popUser, text='LRL: '+VOO_LRL+'\nURL: '+VOO_URL+'\nAmplitude: '+VOO_VA+'\nPulse Width: '+VOO_VPW,
+                                                   fg='black',font=('Microsoft YaHei UI Light', 12), bg='white')
+                                aoo_val.pack()
                 elif currentMode=='VVI':
                     f = open("data.json", "r+")
                     data = json.load(f)
@@ -529,9 +653,78 @@ def signin():
                                             '\nRefactory Period: '+VVI_ARP+'\nSensitivity: '+VVI_AS+'\nHysterysis: '+VVI_H+'\nSmoothing: '+VVI_S,
                                                fg='black',font=('Microsoft YaHei UI Light', 12), bg='white')
                             vvi_val.pack()
+                elif currentMode=='AOOR':
+                    for i in data:
+                        if i["username"] == username:
+                            if i["AOOR"]["LRL"] == "":
+                                print("No previous parameters saved")
+                            else:
+                                AOO_LRL = i["AOOR"]["LRL"]
+                                AOO_URL = i["AOOR"]["URL"]
+                                AOO_AA = i["AOOR"]["AA"]
+                                AOO_APW = i["AOOR"]["APW"]
+                                # print('the value obtained: ' + AOO_LRL)
+                                aoo_val = Label(popUser, text='LRL: '+AOO_LRL+'\nURL: '+AOO_URL+'\nAmplitude: '+AOO_AA+'\nPulse Width: '+AOO_APW,
+                                                   fg='black',font=('Microsoft YaHei UI Light', 12), bg='white')
+                                aoo_val.pack()
+                elif currentMode=='AAIR':
+                    f = open("data.json", "r+")
+                    data = json.load(f)
+                    for i in data:
+                        if i["username"] == username:
+                            if i["AAIR"]["LRL"] == "":
+                                print("No previous parameters saved")
+                            else:
+                                AAI_LRL=i["AAIR"]["LRL"]
+                                AAI_URL=i["AAIR"]["URL"]
+                                AAI_AA=i["AAIR"]["AA"]
+                                AAI_APW=i["AAIR"]["APW"]
+                                AAI_ARP=i["AAIR"]["ARP"]
+                                AAI_AS=i["AAIR"]["AS"]
+                                AAI_PVARP=i["AAIR"]["PVARP"]
+                                AAI_H=i["AAIR"]["H"]
+                                AAI_S=i["AAIR"]["S"]
+                                aai_val = Label(popUser, text='LRL: '+AAI_LRL+'\nURL: '+AAI_URL+'\nAmplitude: '+AAI_AA+'\nPulse Width: '+AAI_APW+
+                                                '\nRefactory Period: '+AAI_ARP+'\nSensitivity: '+AAI_AS+'\nPVARP: '+AAI_PVARP+'\nHysterysis: '+AAI_H+'\nSmoothing: '+AAI_S,
+                                                   fg='black',font=('Microsoft YaHei UI Light', 12), bg='white')
+                                aai_val.pack()
+                elif currentMode=='VOOR':
+                    for i in data:
+                        if i["username"] == username:
+                            if i["VOOR"]["LRL"] == "":
+                                print("No previous parameters saved")
+                            else:
+                                VOOR_LRL = i["VOOR"]["LRL"]
+                                VOOR_URL = i["VOOR"]["URL"]
+                                VOOR_VA = i["VOOR"]["VA"]
+                                VOOR_VPW = i["VOOR"]["VPW"]
+                                # print('the value obtained: ' + VOO_LRL)
+                                aoo_val = Label(popUser, text='LRL: '+VOOR_LRL+'\nURL: '+VOOR_URL+'\nAmplitude: '+VOOR_VA+'\nPulse Width: '+VOOR_VPW,
+                                                   fg='black',font=('Microsoft YaHei UI Light', 12), bg='white')
+                                aoo_val.pack()
+                elif currentMode=='VVIR':
+                    f = open("data.json", "r+")
+                    data = json.load(f)
+                    for i in data:
+                        if i["username"] == username:
+                            if i["VVIR"]["LRL"] == "":
+                                print("No previous parameters saved")
+                            else:
+                                VVI_LRL = i["VVIR"]["LRL"]
+                                VVI_URL = i["VVIR"]["URL"]
+                                VVI_AA = i["VVIR"]["VA"]
+                                VVI_APW = i["VVIR"]["VPW"]
+                                VVI_ARP = i["VVIR"]["VRP"]
+                                VVI_AS = i["VVIR"]["VS"]
+                                VVI_H = i["VVIR"]["H"]
+                                VVI_S = i["VVIR"]["S"]
+                            vvi_val = Label(popUser, text='LRL: '+VVI_LRL+'\nURL: '+VVI_URL+'\nAmplitude: '+VVI_AA+'\nPulse Width: '+VVI_APW+
+                                            '\nRefactory Period: '+VVI_ARP+'\nSensitivity: '+VVI_AS+'\nHysterysis: '+VVI_H+'\nSmoothing: '+VVI_S,
+                                               fg='black',font=('Microsoft YaHei UI Light', 12), bg='white')
+                            vvi_val.pack()
                 def noLoad():
                     popUser.destroy()
-                def yesLoad():
+                def yesLoad(): #if user selects "yes" to load previous values, the previous values are sent and printed in the console
                     try:
                         if currentMode=='AOO':
                             print('LRL: '+AOO_LRL+'\nURL: '+AOO_URL+'\nAmplitude: '+AOO_AA+'\nPulse Width: '+AOO_APW)
@@ -541,6 +734,16 @@ def signin():
                         elif currentMode=='VOO':
                             print('LRL: ' + VOO_LRL + '\nURL: ' + VOO_URL + '\nAmplitude: ' + VOO_VA + '\nPulse Width: ' + VOO_VPW)
                         elif currentMode=='VVI':
+                            print('LRL: '+VVI_LRL+'\nURL: '+VVI_URL+'\nAmplitude: '+VVI_AA+'\nPulse Width: '+VVI_APW+
+                                                '\nRefactory Period: '+VVI_ARP+'\nSensitivity: '+VVI_AS+'\nHysterysis: '+VVI_H+'\nSmoothing: '+VVI_S)
+                        elif currentMode=='AOOR':
+                            print('LRL: '+AOO_LRL+'\nURL: '+AOO_URL+'\nAmplitude: '+AOO_AA+'\nPulse Width: '+AOO_APW)
+                        elif currentMode=='AAIR':
+                            print('LRL: '+AAI_LRL+'\nURL: '+AAI_URL+'\nAmplitude: '+AAI_AA+'\nPulse Width: '+AAI_APW+
+                                                    '\nRefactory Period: '+AAI_ARP+'\nSensitivity: '+AAI_AS+'\nPVARP: '+AAI_PVARP+'\nHysterysis: '+AAI_H+'\nSmoothing: '+AAI_S)
+                        elif currentMode=='VOOR':
+                            print('LRL: ' + VOOR_LRL + '\nURL: ' + VOOR_URL + '\nAmplitude: ' + VOOR_VA + '\nPulse Width: ' + VOOR_VPW)
+                        elif currentMode=='VVIR':
                             print('LRL: '+VVI_LRL+'\nURL: '+VVI_URL+'\nAmplitude: '+VVI_AA+'\nPulse Width: '+VVI_APW+
                                                 '\nRefactory Period: '+VVI_ARP+'\nSensitivity: '+VVI_AS+'\nHysterysis: '+VVI_H+'\nSmoothing: '+VVI_S)
                     except:
@@ -583,9 +786,9 @@ def registerPopup():
         passwordConfirm = pwConfirm.get()
         specialCharacters = "!@#$%^&*()-+?_+=,<>:;\'\"|[]{}`~/\ "
 
-        if password == passwordConfirm:
-            if username != '' and username != 'Username':
-                if not(any(c in specialCharacters for c in username)):
+        if password == passwordConfirm: #while registering check if the passwords match
+            if username != '' and username != 'Username': #username cannot be blank
+                if not(any(c in specialCharacters for c in username)): #special characters are not allowed in the username
                     try:
                         file = open('database.txt', 'r+')
                         d = file.read()
@@ -595,7 +798,7 @@ def registerPopup():
                             messagebox.showerror('Error', 'User Already Exists!')
                             window.destroy()
                         else:
-                            if len(r) <= 10:
+                            if len(r) <= 10: #maximum of 10 users stored
                                 r.update(dict1)
                                 file.truncate(0)
                                 file.close()
@@ -605,39 +808,72 @@ def registerPopup():
                                     f = open("data.json", "r+")
                                     data = json.load(f)
                                     newUserData = {"username": f"{username}",
-                                                     "AOO": {
-                                                         "LRL": "",
-                                                         "URL": "",
-                                                         "AA": "",
-                                                         "APW": ""
-                                                     },
-                                                     "AAI": {
-                                                         "LRL": "",
-                                                         "URL": "",
-                                                         "AA": "",
-                                                         "APW": "",
-                                                         "ARP": "",
-                                                         "AS": "",
-                                                         "PVARP": "",
-                                                         "H": "",
-                                                         "S": ""
-                                                     },
-                                                     "VOO": {
-                                                         "LRL": "",
-                                                         "URL": "",
-                                                         "VA": "",
-                                                         "VPW": ""
-                                                     },
-                                                     "VVI": {
-                                                         "LRL": "",
-                                                         "URL": "",
-                                                         "VA": "",
-                                                         "VPW": "",
-                                                         "VRP": "",
-                                                         "VS": "",
-                                                         "H": "",
-                                                         "S": ""
-                                                     }}
+                                        "AOO": {
+                                            "LRL": "",
+                                            "URL": "",
+                                            "AA": "",
+                                            "APW": ""
+                                        },
+                                        "AAI": {
+                                            "LRL": "",
+                                            "URL": "",
+                                            "AA": "",
+                                            "APW": "",
+                                            "ARP": "",
+                                            "AS": "",
+                                            "PVARP": "",
+                                            "H": "",
+                                            "S": ""
+                                        },
+                                        "VOO": {
+                                            "LRL": "",
+                                            "URL": "",
+                                            "VA": "",
+                                            "VPW": ""
+                                        },
+                                        "VVI": {
+                                            "LRL": "",
+                                            "URL": "",
+                                            "VA": "",
+                                            "VPW": "",
+                                            "VRP": "",
+                                            "VS": "",
+                                            "H": "",
+                                            "S": ""
+                                        },
+                                        "AOOR": {
+                                            "LRL": "",
+                                            "URL": "",
+                                            "AA": "",
+                                            "APW": ""
+                                        },
+                                        "AAIR": {
+                                            "LRL": "",
+                                            "URL": "",
+                                            "AA": "",
+                                            "APW": "",
+                                            "ARP": "",
+                                            "AS": "",
+                                            "PVARP": "",
+                                            "H": "",
+                                            "S": ""
+                                        },
+                                        "VOOR": {
+                                            "LRL": "",
+                                            "URL": "",
+                                            "VA": "",
+                                            "VPW": ""
+                                        },
+                                        "VVIR": {
+                                            "LRL": "",
+                                            "URL": "",
+                                            "VA": "",
+                                            "VPW": "",
+                                            "VRP": "",
+                                            "VS": "",
+                                            "H": "",
+                                            "S": ""
+                                        }}
                                     data.append(newUserData)
                                     f.seek(0)
                                     json.dump(data, f, indent=4)
@@ -667,39 +903,72 @@ def registerPopup():
                             w = file.write(str(r))
                             try:
                                 pp1=[{"username": " ",
-                                                     "AOO": {
-                                                         "LRL": "",
-                                                         "URL": "",
-                                                         "AA": "",
-                                                         "APW": ""
-                                                     },
-                                                     "AAI": {
-                                                         "LRL": "",
-                                                         "URL": "",
-                                                         "AA": "",
-                                                         "APW": "",
-                                                         "ARP": "",
-                                                         "AS": "",
-                                                         "PVARP": "",
-                                                         "H": "",
-                                                         "S": ""
-                                                     },
-                                                     "VOO": {
-                                                         "LRL": "",
-                                                         "URL": "",
-                                                         "VA": "",
-                                                         "VPW": ""
-                                                     },
-                                                     "VVI": {
-                                                         "LRL": "",
-                                                         "URL": "",
-                                                         "VA": "",
-                                                         "VPW": "",
-                                                         "VRP": "",
-                                                         "VS": "",
-                                                         "H": "",
-                                                         "S": ""
-                                                     }}]
+                                    "AOO": {
+                                        "LRL": "",
+                                        "URL": "",
+                                        "AA": "",
+                                        "APW": ""
+                                    },
+                                    "AAI": {
+                                        "LRL": "",
+                                        "URL": "",
+                                        "AA": "",
+                                        "APW": "",
+                                        "ARP": "",
+                                        "AS": "",
+                                        "PVARP": "",
+                                        "H": "",
+                                        "S": ""
+                                    },
+                                    "VOO": {
+                                        "LRL": "",
+                                        "URL": "",
+                                        "VA": "",
+                                        "VPW": ""
+                                    },
+                                    "VVI": {
+                                        "LRL": "",
+                                        "URL": "",
+                                        "VA": "",
+                                        "VPW": "",
+                                        "VRP": "",
+                                        "VS": "",
+                                        "H": "",
+                                        "S": ""
+                                    },
+                                    "AOOR": {
+                                        "LRL": "",
+                                        "URL": "",
+                                        "AA": "",
+                                        "APW": ""
+                                    },
+                                    "AAIR": {
+                                        "LRL": "",
+                                        "URL": "",
+                                        "AA": "",
+                                        "APW": "",
+                                        "ARP": "",
+                                        "AS": "",
+                                        "PVARP": "",
+                                        "H": "",
+                                        "S": ""
+                                    },
+                                    "VOOR": {
+                                        "LRL": "",
+                                        "URL": "",
+                                        "VA": "",
+                                        "VPW": ""
+                                    },
+                                    "VVIR": {
+                                        "LRL": "",
+                                        "URL": "",
+                                        "VA": "",
+                                        "VPW": "",
+                                        "VRP": "",
+                                        "VS": "",
+                                        "H": "",
+                                        "S": ""
+                                    }}]
                                 with open('data.json','w') as f:
                                     json.dump(pp1,f,indent=4)
                                 f.close()
@@ -738,12 +1007,45 @@ def registerPopup():
                                                    "VS": "",
                                                    "H": "",
                                                    "S": ""
+                                               },
+                                               "AOOR": {
+                                                   "LRL": "",
+                                                   "URL": "",
+                                                   "AA": "",
+                                                   "APW": ""
+                                               },
+                                               "AAIR": {
+                                                   "LRL": "",
+                                                   "URL": "",
+                                                   "AA": "",
+                                                   "APW": "",
+                                                   "ARP": "",
+                                                   "AS": "",
+                                                   "PVARP": "",
+                                                   "H": "",
+                                                   "S": ""
+                                               },
+                                               "VOOR": {
+                                                   "LRL": "",
+                                                   "URL": "",
+                                                   "VA": "",
+                                                   "VPW": ""
+                                               },
+                                               "VVIR": {
+                                                   "LRL": "",
+                                                   "URL": "",
+                                                   "VA": "",
+                                                   "VPW": "",
+                                                   "VRP": "",
+                                                   "VS": "",
+                                                   "H": "",
+                                                   "S": ""
                                                }}
                                 data.append(newUserData)
                                 f.seek(0)
                                 json.dump(data, f, indent=4)
                                 f.close()
-                            except:
+                            except: #multiple errors for not following the parameters
                                 messagebox.showerror("Critical Error!",
                                                      "Critical Error, do not alter data files! Delete database.txt and data.json and restart to continue!")
                             messagebox.showinfo('Success', 'Registered Successfully!')
@@ -799,6 +1101,39 @@ def registerPopup():
                         "VS": "",
                         "H": "",
                         "S": ""
+                    },
+                    "AOOR": {
+                        "LRL": "",
+                        "URL": "",
+                        "AA": "",
+                        "APW": ""
+                    },
+                    "AAIR": {
+                        "LRL": "",
+                        "URL": "",
+                        "AA": "",
+                        "APW": "",
+                        "ARP": "",
+                        "AS": "",
+                        "PVARP": "",
+                        "H": "",
+                        "S": ""
+                    },
+                    "VOOR": {
+                        "LRL": "",
+                        "URL": "",
+                        "VA": "",
+                        "VPW": ""
+                    },
+                    "VVIR": {
+                        "LRL": "",
+                        "URL": "",
+                        "VA": "",
+                        "VPW": "",
+                        "VRP": "",
+                        "VS": "",
+                        "H": "",
+                        "S": ""
                     }}]
             with open('data.json', 'w') as f:
                 json.dump(pp1, f, indent=4)
@@ -810,10 +1145,10 @@ def registerPopup():
     Button(window, text="X", bg='white', fg='#E5E4E2', border=0, command=deleteDatabase).place(x=0, y=380)
 
     ## USERNAME FIELD
-    def onEnter(e):
+    def onEnter(e): #when clicking on the username field the field becomes empty
         user.delete(0, 'end')
 
-    def onExit(e):
+    def onExit(e): #when exiting the username field the field holds the placeholder "Username"
         if user.get() == '':
             user.insert(0, 'Username')
 
@@ -900,7 +1235,7 @@ Frame(frame, width=295, height=2, bg='#737CA1').place(x=70, y=180)
 
 ## PASSWORD HIDER
 def hidePass():
-    if pw.cget('show') == '*':
+    if pw.cget('show') == '*': #hide the password when the checkbox is selected
         pw.config(show='')
     else:
         pw.config(show='*')
