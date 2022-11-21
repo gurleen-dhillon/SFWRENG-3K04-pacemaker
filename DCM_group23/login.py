@@ -560,7 +560,8 @@ def signin():
                                 lrl = hex(int(AOO_LRL))
                                 url = hex(int(AOO_URL))
                                 Vent_PW=0x00
-                                Atr_PW = hex(int(AOO_APW))
+                                #Atr_PW = hex(int(AOO_APW))
+                                Atr_PW = 0x01
                                 Vent_RP = 0x00
                                 Atr_RP = 0x00
                                 Vent_Amp = 0x00
