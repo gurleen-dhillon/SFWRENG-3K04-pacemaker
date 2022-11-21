@@ -3,6 +3,7 @@ from tkinter import messagebox
 import ast
 import os
 import json
+import serial
 
 #Create main page for logging in to DCM
 main = Tk()
@@ -57,8 +58,10 @@ def signin():
 
             def closeDCM():
                 global loginStatus
-                loginStatus=0
-                app.destroy()
+                confirmClose=messagebox.askokcancel("Confirm Logout", "Are you sure you want to logout?")
+                if confirmClose:
+                    loginStatus=0
+                    app.destroy()
             app.protocol("WM_DELETE_WINDOW", closeDCM)
 
             ## MODE SELECTION
@@ -80,16 +83,23 @@ def signin():
             deviceStatus = Label(app, text='Device Status:', fg='black', bg='white',
                                  font=('Microsoft YaHei UI Light', 16, 'bold'))
             deviceStatus.place(x=500, y=20)
-            deviceStatus1 = Label(app, text='Disconnected...', fg='#C11B17', bg='white',
-                                  font=('Microsoft YaHei UI Light', 14))
+            global serConnected
+            serConnected=0
+            try:
+                ser = serial.Serial("COM4", 115200)
+                deviceStatus1 = Label(app, text='Connected!', fg='#2E8B57', bg='white',font=('Microsoft YaHei UI Light', 14))
+                serConnected=1
+            except:
+                deviceStatus1 = Label(app, text='Disconnected...', fg='#C11B17', bg='white',font=('Microsoft YaHei UI Light', 14))
+                serConnected=0
             deviceStatus1.place(x=650, y=21)
             Label(app, text='User: '+username, fg='#342D7E', bg='white',font=('Microsoft YaHei UI Light', 9)).place(x=1,y=1)
             def logout():
                 global loginStatus
-                confirmClose=messagebox.askokcancel("Confirm Logout", "Are you sure you want to logout?")
-                if confirmClose:
-                    loginStatus = 0
-                    app.destroy()
+                # confirmClose=messagebox.askokcancel("Confirm Logout", "Are you sure you want to logout?")
+                # if confirmClose:
+                loginStatus = 0
+                app.destroy()
             Button(app, width=8, pady=5, text="Logout", bg='#737CA1', fg='white', border=0,
                    command=logout).place(x=850, y=20)
 
@@ -340,6 +350,7 @@ def signin():
                       font=('Helvetica bold', 9)).place(x=635, y=175)
 
             def outputVal(): #save values to json file and output them once the "Set Values" Button has been pressed
+                global serConnected
                 if currentMode=='AOO':
                     AOO_LRL=clickedLRL.get()
                     AOO_URL=str(URL_value.get())
@@ -527,7 +538,49 @@ def signin():
                         print('Please Try Again!')
                         messagebox.showerror("Invalid Entry", "Lower Rate Limit cannot be greater than or equal to Upper Rate Limit!!")
                     else:
-                        print('Lower Rate Limit:', clickedLRL.get() + 'ppm')
+                        if serConnected==1:
+                            if ser.isOpen():
+                                ser.close()
+                            ser.open()
+                            sync = 0x10
+
+                            if currentMode=='VOO':
+                                mode=0x01
+                                lrl = hex(int(VOO_LRL))
+                                url = hex(int(VOO_URL))
+                                Vent_PW = hex(int(VOO_VPW))
+                                Atr_PW = 0x00
+                                Vent_RP = 0x00
+                                Atr_RP = 0x00
+                                Vent_Amp = hex(int(VOO_VA))
+                                Atr_Amp = 0x00
+
+                            elif currentMode=='AOO':
+                                mode=0x02
+                                lrl = hex(int(AOO_LRL))
+                                url = hex(int(AOO_URL))
+                                Vent_PW=0x00
+                                Atr_PW = hex(int(AOO_APW))
+                                Vent_RP = 0x00
+                                Atr_RP = 0x00
+                                Vent_Amp = 0x00
+                                Atr_Amp = hex(int(AOO_AA))
+
+                            message = bytearray()
+                            message.append(sync)
+                            message.append(mode)
+                            message.append(lrl)
+                            message.append(url)
+                            message.append(Vent_PW)
+                            message.append(Atr_PW)
+                            message.append(Vent_RP)
+                            message.append(Atr_RP)
+                            message.append(Vent_Amp)
+                            message.append(Atr_Amp)
+                            ser.write(message)
+                            ser.close()
+
+                        print('Lower Rate Limit:', clickedLRL.get()+ 'ppm')
                         print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
                         print('Amplitude: ', str(clickedAA.get()), 'V')
                         print('Pulse Width: ', PW_value.get(), 'V')
@@ -561,6 +614,9 @@ def signin():
                         print('V Sensitivity: ', str(V_clicked_sens.get()), 'V')
                         print('Hysteresis', hyst_value.get())
                         print('Smoothing Rate: ', str(smoothingRate.get()) + '%')
+
+
+
                 elif currentMode == 'AOOR' or currentMode == 'VOOR':
                     print('Lower Rate Limit:', clickedLRL.get() + 'ppm')
                     print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
