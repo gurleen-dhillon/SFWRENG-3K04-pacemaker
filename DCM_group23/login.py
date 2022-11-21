@@ -250,7 +250,7 @@ def signin():
 
             def APW_slider(): #slider for the pulse width
                 global PW_value
-                PW_value = DoubleVar()
+                PW_value = IntVar()
                 s4 = Scale(displayFrame, from_=1, to=30, orient=HORIZONTAL, length=250, resolution=1,
                            background='white', troughcolor='#737CA1', activebackground='white', variable=PW_value)
                 s4.place(x=200, y=260)
