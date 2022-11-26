@@ -554,22 +554,21 @@ def signin():
                                 Pace_Amp = struct.pack("f", float(VOO_VA))
                                 Vent_RP = struct.pack("H", 0)
                                 Atr_RP = struct.pack("H", 0)
-
+                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP)
+                                ser.write(com)
+                                ser.close()
                             elif currentMode=='AOO':
-                                mode=0x02
-                                lrl = hex(int(AOO_LRL))
-                                url = hex(int(AOO_URL))
-                                Vent_PW=0x00
-                                #Atr_PW = hex(int(AOO_APW))
-                                Atr_PW = 0x01
-                                Vent_RP = 0x00
-                                Atr_RP = 0x00
-                                Vent_Amp = 0x00
-                                Atr_Amp = hex(int(AOO_AA))
-
-                            com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP)
-                            ser.write(com)
-                            ser.close()
+                                mode=struct.pack("H",2)
+                                lrl = struct.pack("H", int(AOO_LRL))
+                                url = struct.pack("H", int(AOO_URL))
+                                Vent_PW = struct.pack("H", 0)
+                                Atr_PW = struct.pack("H", int(AOO_APW))
+                                Pace_Amp = struct.pack("f", float(AOO_AA))
+                                Vent_RP = struct.pack("H", 0)
+                                Atr_RP = struct.pack("H", 0)
+                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP)
+                                ser.write(com)
+                                ser.close()
 
                         print('Lower Rate Limit:', clickedLRL.get()+ 'ppm')
                         print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
@@ -580,6 +579,23 @@ def signin():
                         print('Please Try Again!')
                         messagebox.showerror("Invalid Entry", "Lower Rate Limit cannot be greater than or equal to Upper Rate Limit!!")
                     else:
+                        if serConnected==1:
+                            if ser.isOpen():
+                                ser.close()
+                            ser.open()
+                            sync = b'\x10'
+                            if currentMode=='AAI':
+                                mode=struct.pack("H",4)
+                                lrl = struct.pack("H", int(AAI_LRL))
+                                url = struct.pack("H", int(AAI_URL))
+                                Vent_PW = struct.pack("H", 0)
+                                Atr_PW = struct.pack("H", int(AAI_APW))
+                                Pace_Amp = struct.pack("f", float(AAI_VA))
+                                Vent_RP = struct.pack("H", 0)
+                                Atr_RP = struct.pack("H", int(AAI_ARP))
+                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP)
+                                ser.write(com)
+                                ser.close()
                         print('Lower Rate Limit:', clickedLRL.get() + 'ppm')
                         print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
                         print('Amplitude: ', str(clickedAA.get()), 'V')
@@ -597,6 +613,23 @@ def signin():
                         print('Please Try Again!')
                         messagebox.showerror("Invalid Entry", "Lower Rate Limit cannot be greater than or equal to Upper Rate Limit!!")
                     else:
+                        if serConnected==1:
+                            if ser.isOpen():
+                                ser.close()
+                            ser.open()
+                            sync = b'\x10'
+                            if currentMode=='VVI':
+                                mode=struct.pack("H",3)
+                                lrl = struct.pack("H", int(VVI_LRL))
+                                url = struct.pack("H", int(VVI_URL))
+                                Vent_PW = struct.pack("H", int(VVI_VPW))
+                                Atr_PW = struct.pack("H", 0)
+                                Pace_Amp = struct.pack("f", float(VVI_VA))
+                                Vent_RP = struct.pack("H", int(VVI_VRP))
+                                Atr_RP = struct.pack("H", 0)
+                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP)
+                                ser.write(com)
+                                ser.close()
                         print('Lower Rate Limit:', clickedLRL.get() + 'ppm')
                         print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
                         print('Amplitude: ', str(clickedAA.get()), 'V')
