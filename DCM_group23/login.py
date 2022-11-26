@@ -826,13 +826,77 @@ def signin():
                 def yesLoad(): #if user selects "yes" to load previous values, the previous values are sent and printed in the console
                     try:
                         if currentMode=='AOO':
+                            if serConnected == 1:
+                                if ser.isOpen():
+                                    ser.close()
+                                ser.open()
+                                sync = b'\x10'
+                                mode = struct.pack("H", 2)
+                                lrl = struct.pack("H", int(AOO_LRL))
+                                url = struct.pack("H", int(AOO_URL))
+                                Vent_PW = struct.pack("H", 0)
+                                Atr_PW = struct.pack("H", int(AOO_APW))
+                                Pace_Amp = struct.pack("f", float(AOO_AA))
+                                Vent_RP = struct.pack("H", 0)
+                                Atr_RP = struct.pack("H", 0)
+                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP)
+                                ser.write(com)
+                                ser.close()
                             print('LRL: '+AOO_LRL+'\nURL: '+AOO_URL+'\nAmplitude: '+AOO_AA+'\nPulse Width: '+AOO_APW)
                         elif currentMode=='AAI':
+                            if serConnected == 1:
+                                if ser.isOpen():
+                                    ser.close()
+                                ser.open()
+                                sync = b'\x10'
+                                mode = struct.pack("H", 4)
+                                lrl = struct.pack("H", int(AAI_LRL))
+                                url = struct.pack("H", int(AAI_URL))
+                                Vent_PW = struct.pack("H", 0)
+                                Atr_PW = struct.pack("H", int(AAI_APW))
+                                Pace_Amp = struct.pack("f", float(AAI_VA))
+                                Vent_RP = struct.pack("H", 0)
+                                Atr_RP = struct.pack("H", int(AAI_ARP))
+                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP)
+                                ser.write(com)
+                                ser.close()
                             print('LRL: '+AAI_LRL+'\nURL: '+AAI_URL+'\nAmplitude: '+AAI_AA+'\nPulse Width: '+AAI_APW+
                                                     '\nRefactory Period: '+AAI_ARP+'\nSensitivity: '+AAI_AS+'\nPVARP: '+AAI_PVARP+'\nHysterysis: '+AAI_H+'\nSmoothing: '+AAI_S)
                         elif currentMode=='VOO':
+                            if serConnected == 1:
+                                if ser.isOpen():
+                                    ser.close()
+                                ser.open()
+                                sync = b'\x10'
+                                mode = struct.pack("H", 1)
+                                lrl = struct.pack("H", int(VOO_LRL))
+                                url = struct.pack("H", int(VOO_URL))
+                                Vent_PW = struct.pack("H", int(VOO_VPW))
+                                Atr_PW = struct.pack("H", 0)
+                                Pace_Amp = struct.pack("f", float(VOO_VA))
+                                Vent_RP = struct.pack("H", 0)
+                                Atr_RP = struct.pack("H", 0)
+                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP)
+                                ser.write(com)
+                                ser.close()
                             print('LRL: ' + VOO_LRL + '\nURL: ' + VOO_URL + '\nAmplitude: ' + VOO_VA + '\nPulse Width: ' + VOO_VPW)
                         elif currentMode=='VVI':
+                            if serConnected == 1:
+                                if ser.isOpen():
+                                    ser.close()
+                                ser.open()
+                                sync = b'\x10'
+                                mode = struct.pack("H", 3)
+                                lrl = struct.pack("H", int(VVI_LRL))
+                                url = struct.pack("H", int(VVI_URL))
+                                Vent_PW = struct.pack("H", int(VVI_VPW))
+                                Atr_PW = struct.pack("H", 0)
+                                Pace_Amp = struct.pack("f", float(VVI_VA))
+                                Vent_RP = struct.pack("H", int(VVI_VRP))
+                                Atr_RP = struct.pack("H", 0)
+                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP)
+                                ser.write(com)
+                                ser.close()
                             print('LRL: '+VVI_LRL+'\nURL: '+VVI_URL+'\nAmplitude: '+VVI_AA+'\nPulse Width: '+VVI_APW+
                                                 '\nRefactory Period: '+VVI_ARP+'\nSensitivity: '+VVI_AS+'\nHysterysis: '+VVI_H+'\nSmoothing: '+VVI_S)
                         elif currentMode=='AOOR':
