@@ -551,7 +551,7 @@ def signin():
                                 url = struct.pack("H", int(VOO_URL))
                                 Vent_PW = struct.pack("H", int(VOO_VPW))
                                 Atr_PW = struct.pack("H", 0)
-                                Pace_Amp = struct.pack("f", int(VOO_VA))
+                                Pace_Amp = struct.pack("f", float(VOO_VA))
                                 Vent_RP = struct.pack("H", 0)
                                 Atr_RP = struct.pack("H", 0)
 
@@ -571,7 +571,6 @@ def signin():
                             ser.write(com)
                             ser.close()
 
-                        print(hex(int(AOO_LRL)))
                         print('Lower Rate Limit:', clickedLRL.get()+ 'ppm')
                         print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
                         print('Amplitude: ', str(clickedAA.get()), 'V')
