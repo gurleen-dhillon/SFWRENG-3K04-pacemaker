@@ -4,6 +4,7 @@ import ast
 import os
 import json
 import serial
+import struct
 
 #Create main page for logging in to DCM
 main = Tk()
@@ -542,18 +543,17 @@ def signin():
                             if ser.isOpen():
                                 ser.close()
                             ser.open()
-                            sync = 0x10
+                            sync = b'\x10'
 
                             if currentMode=='VOO':
-                                mode=0x01
-                                lrl = hex(int(VOO_LRL))
-                                url = hex(int(VOO_URL))
-                                Vent_PW = hex(int(VOO_VPW))
-                                Atr_PW = 0x00
-                                Vent_RP = 0x00
-                                Atr_RP = 0x00
-                                Vent_Amp = hex(int(VOO_VA))
-                                Atr_Amp = 0x00
+                                mode=struct.pack("H",1)
+                                lrl = struct.pack("H", int(VOO_LRL))
+                                url = struct.pack("H", int(VOO_URL))
+                                Vent_PW = struct.pack("H", int(VOO_VPW))
+                                Atr_PW = struct.pack("H", 0)
+                                Pace_Amp = struct.pack("f", int(VOO_VA))
+                                Vent_RP = struct.pack("H", 0)
+                                Atr_RP = struct.pack("H", 0)
 
                             elif currentMode=='AOO':
                                 mode=0x02
@@ -567,20 +567,11 @@ def signin():
                                 Vent_Amp = 0x00
                                 Atr_Amp = hex(int(AOO_AA))
 
-                            message = bytearray()
-                            message.append(sync)
-                            message.append(mode)
-                            message.append(lrl)
-                            message.append(url)
-                            message.append(Vent_PW)
-                            message.append(Atr_PW)
-                            message.append(Vent_RP)
-                            message.append(Atr_RP)
-                            message.append(Vent_Amp)
-                            message.append(Atr_Amp)
-                            ser.write(message)
+                            com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP)
+                            ser.write(com)
                             ser.close()
 
+                        print(hex(int(AOO_LRL)))
                         print('Lower Rate Limit:', clickedLRL.get()+ 'ppm')
                         print('Upper Rate Limit:', str(URL_value.get()) + 'ppm')
                         print('Amplitude: ', str(clickedAA.get()), 'V')
