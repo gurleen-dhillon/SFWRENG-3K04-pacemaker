@@ -1,5 +1,6 @@
 import serial
-ser = serial.Serial("COM4",115200)
+
+ser = serial.Serial("COM4", 115200)
 
 if ser.isOpen():
     ser.close()
