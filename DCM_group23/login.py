@@ -5,6 +5,9 @@ import os
 import json
 import serial
 import struct
+import pandas as pd
+from matplotlib import pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 #Create main page for logging in to DCM
 main = Tk()
@@ -123,6 +126,7 @@ def signin():
             def selected(x): #display certain sliders and adjustable parameters based on the mode selected
                 clear_frame()
                 setButton()
+                loadECG()
                 loadPrev()
                 if x == 'AOO' or x == 'VOO':
                     LRL_dropdown()
@@ -669,6 +673,27 @@ def signin():
                     print('Hysteresis', hyst_value.get())
                     print('Smoothing Rate: ', str(smoothingRate.get()) + '%')
 
+            def displayECG():
+                data1 = {'millisecond': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                         'beats': [192, 192, 192, 194, 192, 192, 190, 204, 188, 192, 192, 196, 192, 192, 192]
+                         }
+                df = pd.DataFrame(data1)
+
+                ecg = Toplevel(app)
+                ecg.title("ECG")
+                ecg.geometry('500x400+525+200')
+                ecg.configure(bg='#fff')
+                ecg.resizable(False, False)
+
+                fig = plt.Figure(figsize=(6, 4), dpi=100)
+                a = fig.add_subplot(111)
+                a.set_title('ECG Graph',color='#737CA1')
+                line = FigureCanvasTkAgg(fig, ecg)
+                line.get_tk_widget().pack(side=LEFT, fill=BOTH)
+                df1 = df[['millisecond', 'beats']].groupby('millisecond').sum()
+                df1.plot(kind='line',legend=False, ax=a, color='black', marker='.', fontsize=10)
+                Button(ecg, width=8, pady=4, text="Exit", bg='#737CA1', fg='#fff', border=0, command=ecg.destroy).place(x=390, y=15)
+
             def loadValues():
                 popUser = Toplevel(app)
                 popUser.title = ("Confirm")
@@ -918,9 +943,11 @@ def signin():
                 o2=Button(popUser, width=20, pady=8, text="No", bg='#737CA1', fg='white', border=0,command=noLoad)
                 o2.place(x=380,y=250)
             def setButton():
-                Button(displayFrame, width=30, pady=8, text="Set Values", bg='#737CA1', fg='white', border=0,
-                       command=outputVal).place(x=375, y=375)
-
+                Button(displayFrame, width=25, pady=8, text="Set Values", bg='#737CA1', fg='white', border=0,
+                       command=outputVal).place(x=350, y=375)
+            def loadECG():
+                Button(displayFrame, width=25, pady=8, text="Display ECG Graph", bg='#737CA1', fg='white', border=0,
+                       command=displayECG).place(x=700, y=375)
             def loadPrev():
                 Button(displayFrame, width=25, pady=8, text="Load Previous Values", bg='#737CA1', fg='white', border=0,
                        command=loadValues).place(x=0, y=375)
