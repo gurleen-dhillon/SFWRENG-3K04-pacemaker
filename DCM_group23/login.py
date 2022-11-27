@@ -5,11 +5,15 @@ import os
 import json
 import serial
 import struct
-import pandas as pd
+import random
+from random import randint
+from itertools import count
 from matplotlib import pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.animation import FuncAnimation
+import ctypes
 
 #Create main page for logging in to DCM
+ctypes.windll.shcore.SetProcessDpiAwareness(0)
 main = Tk()
 main.title("Login")
 main.geometry('950x500+300+150')
@@ -48,6 +52,7 @@ def signin():
         #if the username and password match the database login is successful
         if username in r.keys() and password == r[username] and loginStatus==0:
             #main.destroy()
+            main.wm_state('iconic')
             loginStatus=1
             app = Toplevel(main)
             #app = Tk()
@@ -66,6 +71,7 @@ def signin():
                 if confirmClose:
                     loginStatus=0
                     app.destroy()
+                    main.wm_state('normal')
             app.protocol("WM_DELETE_WINDOW", closeDCM)
 
             ## MODE SELECTION
@@ -86,17 +92,46 @@ def signin():
 
             deviceStatus = Label(app, text='Device Status:', fg='black', bg='white',
                                  font=('Microsoft YaHei UI Light', 16, 'bold'))
-            deviceStatus.place(x=500, y=20)
+            deviceStatus.place(x=550, y=20)
             global serConnected
             serConnected=0
-            try:
-                ser = serial.Serial("COM4", 115200)
-                deviceStatus1 = Label(app, text='Connected!', fg='#2E8B57', bg='white',font=('Microsoft YaHei UI Light', 14))
-                serConnected=1
-            except:
-                deviceStatus1 = Label(app, text='Disconnected...', fg='#C11B17', bg='white',font=('Microsoft YaHei UI Light', 14))
-                serConnected=0
-            deviceStatus1.place(x=650, y=21)
+            def portSelect(x):
+                global serConnected
+                try:
+                    ser = serial.Serial(x, 115200)
+                    deviceStatus1 = Label(app, text='Connected!', fg='#2E8B57', bg='white',
+                                          font=('Microsoft YaHei UI Light', 14))
+                    serConnected = 1
+                except:
+                    deviceStatus1 = Label(app, text='Disconnected...', fg='#C11B17', bg='white',
+                                          font=('Microsoft YaHei UI Light', 14))
+                    serConnected = 0
+                deviceStatus1.place(x=700, y=21)
+            port = [
+                "COM0",
+                "COM1",
+                "COM2",
+                "COM3",
+                "COM4",
+                "COM5",
+                "COM6",
+                "COM7",
+                "COM8",
+                "COM9",
+                "COM10",
+                "COM11",
+                "COM12",
+                "COM13",
+                "COM14",
+                "COM15",
+            ]
+            clicked0 = StringVar()
+            clicked0.set(port[0])
+            dropdown0 = OptionMenu(app, clicked0, *port, command=portSelect)
+            dropdown0.config(bg='white', width=8, fg='black', activebackground='white', activeforeground='#737CA1')
+            dropdown0["menu"].config(bg="white", fg="black", activebackground="white", activeforeground="#737CA1")
+            dropdown0.place(x=425,y=20)
+
             Label(app, text='User: '+username, fg='#342D7E', bg='white',font=('Microsoft YaHei UI Light', 9)).place(x=1,y=1)
             def logout():
                 global loginStatus
@@ -104,20 +139,10 @@ def signin():
                 # if confirmClose:
                 loginStatus = 0
                 app.destroy()
+                main.wm_state('normal')
             Button(app, width=8, pady=5, text="Logout", bg='#737CA1', fg='white', border=0,
                    command=logout).place(x=850, y=20)
 
-            # def about():
-            #     pop = Toplevel(app)
-            #     pop.title = ("About DCM")
-            #     pop.geometry("170x100+700+300")
-            #     pop.config(bg='white')
-            #     aboutInfo = Label(pop,
-            #                       text='Application model #ABC123\nSoftware Version 1.0\nSerial #100555213\nMcMaster University',
-            #                       fg='black', bg='white').place(x=10, y=10)
-            #
-            # aboutButton = Button(app, text='About', bg='#737CA1', fg='white', width=10, command=about)
-            # aboutButton.place(x=850, y=20)
 
             def clear_frame(): #used to clear the current mode before updating with attributes/parameters for a new mode
                 for widgets in displayFrame.winfo_children():
@@ -674,25 +699,81 @@ def signin():
                     print('Smoothing Rate: ', str(smoothingRate.get()) + '%')
 
             def displayECG():
-                data1 = {'millisecond': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-                         'beats': [192, 192, 192, 194, 192, 192, 190, 204, 188, 192, 192, 196, 192, 192, 192]
-                         }
-                df = pd.DataFrame(data1)
+                work=0
+                f = open("data.json", "r+")
+                data = json.load(f)
+                if currentMode == 'AOO':
+                    for i in data:
+                        if i["username"] == username:
+                            if i["AOO"]["LRL"] == "":
+                                messagebox.showerror("No Values Loaded", "Please set values before trying to display ECG graph!")
+                            else:
+                                work=1
+                elif currentMode == 'VOO':
+                    for i in data:
+                        if i["username"] == username:
+                            if i["VOO"]["LRL"] == "":
+                                messagebox.showerror("No Values Loaded", "Please set values before trying to display ECG graph!")
+                            else:
+                                work=1
+                elif currentMode == 'AAI':
+                    for i in data:
+                        if i["username"] == username:
+                            if i["AAI"]["LRL"] == "":
+                                messagebox.showerror("No Values Loaded", "Please set values before trying to display ECG graph!")
+                            else:
+                                work=1
+                elif currentMode == 'VVI':
+                    for i in data:
+                        if i["username"] == username:
+                            if i["VVI"]["LRL"] == "":
+                                messagebox.showerror("No Values Loaded", "Please set values before trying to display ECG graph!")
+                            else:
+                                work=1
+                if work==1:
+                    val = count()
+                    x_val = []
+                    y_val = []
+                    z = [192, 192, 192, 194, 192, 192, 190, 204, 188, 192, 192, 196, 192, 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         192, 192, random.randint(193, 195), 192, 192, 190, random.randint(202, 204), random.randint(187, 190), 192, 192, random.randint(196, 198), 192, 192,
+                         ]
 
-                ecg = Toplevel(app)
-                ecg.title("ECG")
-                ecg.geometry('500x400+525+200')
-                ecg.configure(bg='#fff')
-                ecg.resizable(False, False)
+                    def live(x):
+                        try:
+                            x_val.append(next(val))
+                            y_val.append(z[x])
+                            plt.cla()
+                            plt.plot(x_val, y_val, color='#b40003')
+                            plt.title('ECG Graph')
+                            plt.xlabel('Time (s)')
+                            plt.ylabel('Pulse (V)')
+                        except:
+                            pass
 
-                fig = plt.Figure(figsize=(6, 4), dpi=100)
-                a = fig.add_subplot(111)
-                a.set_title('ECG Graph',color='#737CA1')
-                line = FigureCanvasTkAgg(fig, ecg)
-                line.get_tk_widget().pack(side=LEFT, fill=BOTH)
-                df1 = df[['millisecond', 'beats']].groupby('millisecond').sum()
-                df1.plot(kind='line',legend=False, ax=a, color='black', marker='.', fontsize=10)
-                Button(ecg, width=8, pady=4, text="Exit", bg='#737CA1', fg='#fff', border=0, command=ecg.destroy).place(x=390, y=15)
+                    x = FuncAnimation(plt.gcf(), live, interval=1)
+                    plt.tight_layout()
+                    plt.show()
 
             def loadValues():
                 popUser = Toplevel(app)
