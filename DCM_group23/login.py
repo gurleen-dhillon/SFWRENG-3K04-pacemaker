@@ -767,7 +767,7 @@ def signin():
                             plt.plot(x_val, y_val, color='#b40003')
                             plt.title('ECG Graph')
                             plt.xlabel('Time (s)')
-                            plt.ylabel('Pulse (V)')
+                            plt.ylabel('Pulse')
                         except:
                             pass
 
