@@ -100,7 +100,7 @@ def signin():
                 global ser
                 try:
                     ser = serial.Serial(x, 115200)
-                    deviceStatus1 = Label(app, text='Connected!', fg='#2E8B57', bg='white', font=('Microsoft YaHei UI Light', 14))
+                    deviceStatus1 = Label(app, text='Connected!     ', fg='#2E8B57', bg='white', font=('Microsoft YaHei UI Light', 14))
                     serConnected = 1
                 except:
                     deviceStatus1 = Label(app, text='Disconnected...', fg='#C11B17', bg='white', font=('Microsoft YaHei UI Light', 14))
