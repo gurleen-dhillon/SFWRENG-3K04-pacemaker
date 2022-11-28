@@ -97,14 +97,13 @@ def signin():
             serConnected=0
             def portSelect(x):
                 global serConnected
+                global ser
                 try:
                     ser = serial.Serial(x, 115200)
-                    deviceStatus1 = Label(app, text='Connected!', fg='#2E8B57', bg='white',
-                                          font=('Microsoft YaHei UI Light', 14))
+                    deviceStatus1 = Label(app, text='Connected!', fg='#2E8B57', bg='white', font=('Microsoft YaHei UI Light', 14))
                     serConnected = 1
                 except:
-                    deviceStatus1 = Label(app, text='Disconnected...', fg='#C11B17', bg='white',
-                                          font=('Microsoft YaHei UI Light', 14))
+                    deviceStatus1 = Label(app, text='Disconnected...', fg='#C11B17', bg='white', font=('Microsoft YaHei UI Light', 14))
                     serConnected = 0
                 deviceStatus1.place(x=700, y=21)
             port = [
@@ -381,6 +380,7 @@ def signin():
 
             def outputVal(): #save values to json file and output them once the "Set Values" Button has been pressed
                 global serConnected
+                global ser
                 if currentMode=='AOO':
                     AOO_LRL=clickedLRL.get()
                     AOO_URL=str(URL_value.get())
@@ -573,6 +573,7 @@ def signin():
                                 ser.close()
                             ser.open()
                             sync = b'\x10'
+                            pace = b'\x30'
 
                             if currentMode=='VOO':
                                 mode=struct.pack("H",1)
@@ -583,7 +584,7 @@ def signin():
                                 Pace_Amp = struct.pack("f", float(VOO_VA))
                                 Vent_RP = struct.pack("H", 0)
                                 Atr_RP = struct.pack("H", 0)
-                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP)
+                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP + pace)
                                 ser.write(com)
                                 ser.close()
                             elif currentMode=='AOO':
@@ -595,7 +596,7 @@ def signin():
                                 Pace_Amp = struct.pack("f", float(AOO_AA))
                                 Vent_RP = struct.pack("H", 0)
                                 Atr_RP = struct.pack("H", 0)
-                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP)
+                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP + pace)
                                 ser.write(com)
                                 ser.close()
 
@@ -622,7 +623,7 @@ def signin():
                                 Pace_Amp = struct.pack("f", float(AAI_AA))
                                 Vent_RP = struct.pack("H", 0)
                                 Atr_RP = struct.pack("H", int(AAI_ARP))
-                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP)
+                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP + pace)
                                 ser.write(com)
                                 ser.close()
                         print('Lower Rate Limit:', clickedLRL.get() + 'ppm')
@@ -656,7 +657,7 @@ def signin():
                                 Pace_Amp = struct.pack("f", float(VVI_VA))
                                 Vent_RP = struct.pack("H", int(VVI_VRP))
                                 Atr_RP = struct.pack("H", 0)
-                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP)
+                                com = (sync + mode + lrl + url + Vent_PW + Atr_PW + Pace_Amp + Vent_RP + Atr_RP + pace)
                                 ser.write(com)
                                 ser.close()
                         print('Lower Rate Limit:', clickedLRL.get() + 'ppm')
