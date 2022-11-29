@@ -649,6 +649,7 @@ def signin():
                                 ser.close()
                             ser.open()
                             sync = b'\x10'
+                            pace = b'\x30'
                             if currentMode=='VVI':
                                 mode=struct.pack("H",3)
                                 lrl = struct.pack("H", int(VVI_LRL))
