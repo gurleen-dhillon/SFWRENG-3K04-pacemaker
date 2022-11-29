@@ -1514,7 +1514,6 @@ def hidePass():
     else:
         pw.config(show='*')
 
-
 checkButton = Checkbutton(main, text="Hide Password", bg='white', command=hidePass)
 checkButton.place(x=550, y=260)
 ## SIGN IN BUTTON
